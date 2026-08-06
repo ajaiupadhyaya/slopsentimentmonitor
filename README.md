@@ -1,0 +1,2 @@
+# slopsentimentmonitor
+we love slop
