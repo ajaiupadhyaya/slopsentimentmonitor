@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/*
+  One rule governs this palette: colour is reserved for sentiment. Structure,
+  labels, rules and volume are all ink or graphite. If something on the page is
+  coloured, it is data.
+
+  Positive/negative are teal and clay rather than green and red — the two stay
+  distinguishable under deuteranopia and protanopia, which green/red does not.
+*/
+@theme {
+  --color-ground: #eff1f3;
+  --color-panel: #ffffff;
+  --color-ink: #12161a;
+  --color-graphite: #59636d;
+  --color-hairline: #dde2e6;
+  --color-pos: #0e7c6b;
+  --color-neg: #c0562f;
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-ground: #0f1317;
+    --color-panel: #161b20;
+    --color-ink: #e7ebee;
+    --color-graphite: #8a949e;
+    --color-hairline: #252c33;
+    --color-pos: #2fb89e;
+    --color-neg: #e0794a;
+  }
+}
+
+html {
+  background: var(--color-ground);
+  color: var(--color-ink);
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  font-family: var(--font-sans);
+}
+
+/* Tabular figures everywhere a number can change, so columns never jitter as
+   the dashboard polls. */
+.tnum {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* The page's one structural motif: a shared zero datum. Every diverging bar and
+   every chart baseline sits on this same line. */
+.datum::before {
+  content: "";
+  position: absolute;
+  inset-block: -2px;
+  left: 50%;
+  width: 1px;
+  background: var(--color-ink);
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-ink);
+  outline-offset: 2px;
+}

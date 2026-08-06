@@ -1,0 +1,66 @@
+[project]
+name = "pulseai"
+version = "0.1.0"
+description = "Real-time market intelligence for large language models"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "asyncpg>=0.30",
+    "alembic>=1.14",
+    "httpx>=0.28",
+    "feedparser>=6.0.11",
+    "python-dateutil>=2.9",
+    "structlog>=24.4",
+    "redis>=5.2",
+    "pgvector>=0.3.6",
+    "typer>=0.15",
+]
+
+[project.optional-dependencies]
+# Local transformer models. Heavy (~2GB with torch); the pipeline degrades to
+# the heuristic analyzer when these are absent.
+ml = [
+    "torch>=2.5",
+    "transformers>=4.46",
+    "sentence-transformers>=3.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "pytest-asyncio>=0.24",
+    "pytest-cov>=6.0",
+    "respx>=0.22",
+    "ruff>=0.8",
+]
+
+[project.scripts]
+pulseai = "pulseai.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pulseai"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = [
+    "live: hits real external networks; deselected by default",
+    "db: requires a running Postgres from docker-compose",
+]
+addopts = "-m 'not live'"
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

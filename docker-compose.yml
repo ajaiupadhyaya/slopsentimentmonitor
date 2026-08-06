@@ -1,0 +1,33 @@
+# Non-default host ports: this machine already has a brew postgresql@14 on 5432
+# and redis on 6379. Keeping off those avoids silently talking to the wrong one.
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    container_name: pulseai-db
+    environment:
+      POSTGRES_USER: pulseai
+      POSTGRES_PASSWORD: pulseai
+      POSTGRES_DB: pulseai
+    ports:
+      - "5433:5432"
+    volumes:
+      - pulseai-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pulseai -d pulseai"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: pulseai-redis
+    ports:
+      - "6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  pulseai-pgdata:
